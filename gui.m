@@ -61,22 +61,29 @@ guidata(hObject, handles);
 % UIWAIT makes gui wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
+global numberofregions oldcell totalspaces totaloccupied totalempty x y z;
+
+% Set up global variables to keep track of how many masks there are and
+% what the old cell looks like
+
+% There are initially no masks
+numberofregions = 0;
+
+% Create a cell of size 0 with 1 dimension
+oldcell = cell(0,1);
+
 % Set up global variables for number of spaces
-global totalspaces;
 totalspaces = 0;
-global totaloccupied;
 totaloccupied = 0;
-global totalempty;
 totalempty = 0;
 
 % Set up global variables for graph data;
-global x;
+% x = entry number or photo number
 x = [];
-global y;
+% y = data on occupied spaces
 y = [];
-global z;
+% z = data on empty spaces
 z = [];
-
 
 
 % --- Outputs from this function are returned to the command line.
@@ -95,24 +102,56 @@ function loadbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to loadbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global image;
 
 % Open the file loader
-filename = uigetfile('*.jpg');
-
-% Change to greyscale
-I = imread(filename);
-I  = I(:,:,1);
-
+[filename, pathname] = uigetfile('*.jpg', 'Select the image file');
+image=imread(fullfile(pathname,filename));
+% Change to greyscale so that impixel returns a RGB triplet
+image = image(:,:,1);
 % Show the image
-imshow(I);
+imshow(image);
+
 
 % --- Executes on button press in drawbutton.
 function drawbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to drawbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA
-BW = roipoly;
+global numberofregions oldcell newcell image;
 
+% Create new cell stack of size one greater then current number of masks
+newcell = cell(numberofregions+1,1);
+
+% Fill this new stack with all exisiting masks
+newcell(1:end-1) = oldcell(:);
+
+% Get coordinates of selected pixels
+[c,r,P] = impixel;
+% Add a coordinate to the end that is the same as the first one - this
+% completes the shape
+c(end+1) = c(1);
+r(end+1) = r(1);
+% Crete a binary (black and white) mask of same size as the image
+BW = poly2mask(c, r, size(image,1), size(image,2));
+
+% Add new mask to the stack
+newcell{numberofregions+1} = BW;
+% This ammended stack now becomes the old one
+oldcell = newcell;
+
+% Create visible overlay for the mask
+imagewithoverlay = image;
+for i=0:size(oldcell,1)-1
+    
+    imagewithoverlay = imoverlay(imagewithoverlay,oldcell{i+1},[1 1 1]);
+
+end
+
+% Redraw the image
+imshow(imagewithoverlay);
+% Increase the number of regions
+numberofregions = numberofregions + 1;
 
 % --- Executes on button press in analysebutton.
 function analysebutton_Callback(hObject, eventdata, handles)
@@ -143,10 +182,10 @@ totalspaces = totaloccupied + totalempty;
 % Check if data sets are empty. If they are, make them arrays with a single
 % element and set it to the first data values
 if(isempty(x) == 1)
-    x = [0];
-    y = [0]; 
+    x = 0;
+    y = 0; 
     y(end) = totaloccupied;
-    z = [0];
+    z = 0;
     z(end) = totalempty;
 % If they are not empty, add new data value to the end of each array
 else
