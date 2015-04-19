@@ -102,7 +102,7 @@ function loadbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to loadbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global image;
+global image oldcell;
 
 % Open the file loader
 [filename, pathname] = uigetfile('*.jpg', 'Select the image file');
@@ -111,6 +111,14 @@ image = imread(fullfile(pathname, filename));
 image = image(:, :, 1);
 % Show the image
 imshow(image);
+
+% Redraw the regions
+imagewithoverlay = image;
+for i = 0 : size(oldcell, 1) - 1 
+    imagewithoverlay = imoverlay(imagewithoverlay, oldcell{i + 1}, [1 1 1]);
+end
+
+imshow(imagewithoverlay);
 
 
 % --- Executes on button press in drawbutton.
@@ -157,7 +165,7 @@ function deletebutton_Callback(hObject, eventdata, handles)
 % hObject    handle to deletebutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global oldcell numberofregions;
+global oldcell numberofregions image;
 
 % Check if there are regions to delete
 if numberofregions > 0
@@ -165,6 +173,14 @@ if numberofregions > 0
     oldcell = oldcell(1 : end - 1, :);
     numberofregions = numberofregions - 1;
 end
+
+% Redraw the regions
+imagewithoverlay = image;
+for i = 0 : size(oldcell, 1) - 1 
+    imagewithoverlay = imoverlay(imagewithoverlay, oldcell{i + 1}, [1 1 1]);
+end
+
+imshow(imagewithoverlay);
 
 
 % --- Executes on button press in analysebutton.
