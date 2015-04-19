@@ -22,7 +22,7 @@ function varargout = gui(varargin)
 
 % Edit the above text to modify the response to help gui
 
-% Last Modified by GUIDE v2.5 16-Apr-2015 15:27:11
+% Last Modified by GUIDE v2.5 19-Apr-2015 19:31:59
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -150,6 +150,22 @@ end
 imshow(imagewithoverlay);
 % Increase the number of regions
 numberofregions = numberofregions + 1;
+
+
+% --- Executes on button press in deletebutton.
+function deletebutton_Callback(hObject, eventdata, handles)
+% hObject    handle to deletebutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global oldcell numberofregions;
+
+% Check if there are regions to delete
+if numberofregions > 0
+    % Replicate the cell of masks, but cut off the last one
+    oldcell = oldcell(1 : end - 1, :);
+    numberofregions = numberofregions - 1;
+end
+
 
 % --- Executes on button press in analysebutton.
 function analysebutton_Callback(hObject, eventdata, handles)
