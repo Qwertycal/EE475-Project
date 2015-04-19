@@ -22,7 +22,7 @@ function varargout = gui(varargin)
 
 % Edit the above text to modify the response to help gui
 
-% Last Modified by GUIDE v2.5 19-Apr-2015 19:31:59
+% Last Modified by GUIDE v2.5 19-Apr-2015 20:09:04
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -190,6 +190,9 @@ function analysebutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global totalspaces totaloccupied totalempty oldcell image x y z;
 
+% Update status text
+set(handles.editstatus, 'String', 'Analysing...');
+
 % Reset the number of empty and occupied spaces
 totaloccupied = 0;
 totalempty = 0;
@@ -244,9 +247,10 @@ else
 end
 
 % Update text boxes on GUI
-set(handles.edittotal,'String',totalspaces);
-set(handles.editoccupied,'String',totaloccupied);
-set(handles.editempty,'String',totalempty);
+set(handles.edittotal, 'String', totalspaces);
+set(handles.editoccupied, 'String', totaloccupied);
+set(handles.editempty, 'String', totalempty);
+set(handles.editstatus, 'String', 'Done!');
 
 
 % --- Executes on button press in plotbutton.
@@ -268,6 +272,20 @@ ylabel('Number of spaces');
 title('Number of empty and occupied spaces over time');
 legend('Occupied','Empty');
 
+
+% --- Executes on button press in clearbutton.
+function clearbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to clearbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global x y z;
+
+% Clear the data for x, y  and z
+x = 0;
+y = 0;
+z = 0;
+
+
 function edittotal_Callback(hObject, eventdata, handles)
 % hObject    handle to edittotal (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -288,7 +306,6 @@ function edittotal_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
 
 
 function editoccupied_Callback(hObject, eventdata, handles)
@@ -334,3 +351,29 @@ function editempty_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+
+function editstatus_Callback(hObject, eventdata, handles)
+% hObject    handle to editstatus (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of editstatus as text
+%        str2double(get(hObject,'String')) returns contents of editstatus as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function editstatus_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editstatus (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+

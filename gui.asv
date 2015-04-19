@@ -22,7 +22,7 @@ function varargout = gui(varargin)
 
 % Edit the above text to modify the response to help gui
 
-% Last Modified by GUIDE v2.5 16-Apr-2015 15:27:11
+% Last Modified by GUIDE v2.5 19-Apr-2015 20:09:04
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -102,7 +102,7 @@ function loadbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to loadbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global image;
+global image oldcell;
 
 % Open the file loader
 [filename, pathname] = uigetfile('*.jpg', 'Select the image file');
@@ -111,6 +111,14 @@ image = imread(fullfile(pathname, filename));
 image = image(:, :, 1);
 % Show the image
 imshow(image);
+
+% Redraw the regions
+imagewithoverlay = image;
+for i = 0 : size(oldcell, 1) - 1 
+    imagewithoverlay = imoverlay(imagewithoverlay, oldcell{i + 1}, [1 1 1]);
+end
+
+imshow(imagewithoverlay);
 
 
 % --- Executes on button press in drawbutton.
@@ -151,6 +159,30 @@ imshow(imagewithoverlay);
 % Increase the number of regions
 numberofregions = numberofregions + 1;
 
+
+% --- Executes on button press in deletebutton.
+function deletebutton_Callback(hObject, eventdata, handles)
+% hObject    handle to deletebutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global oldcell numberofregions image;
+
+% Check if there are regions to delete
+if numberofregions > 0
+    % Replicate the cell of masks, but cut off the last one
+    oldcell = oldcell(1 : end - 1, :);
+    numberofregions = numberofregions - 1;
+end
+
+% Redraw the regions
+imagewithoverlay = image;
+for i = 0 : size(oldcell, 1) - 1 
+    imagewithoverlay = imoverlay(imagewithoverlay, oldcell{i + 1}, [1 1 1]);
+end
+
+imshow(imagewithoverlay);
+
+
 % --- Executes on button press in analysebutton.
 function analysebutton_Callback(hObject, eventdata, handles)
 % hObject    handle to analysebutton (see GCBO)
@@ -158,28 +190,31 @@ function analysebutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global totalspaces totaloccupied totalempty oldcell image x y z;
 
+% Update status text
+set(handles.editstatus, 'String', 'Analysing...');
+
 % Reset the number of empty and occupied spaces
 totaloccupied = 0;
 totalempty = 0;
 
 % Do the analysis
-for i = 1:size(oldcell,1)
+for i = 1 : size(oldcell, 1)
 
     % Get the next mask to analyse
     BW = oldcell{i};
     % Create new vector consisting of the co ordinates of all points where
     % the mask overlaps the image
-    [a,b] = ind2sub([size(image,1),size(image,2)],find(BW));
+    [a, b] = ind2sub([size(image, 1), size(image, 2)], find(BW));
 
     % Create a zero vector which is the same length as the number of
     % co-ordintates
 	% (a and b are same length, so choose either)
-    points = zeros(length(a),1);
+    points = zeros(length(a), 1);
     
     % For every set of co-ordinates
-    for j = 1:length(a)
+    for j = 1 : length(a)
         % Fill this zero vector with the pixel values
-        points(j) = squeeze(image(a(j),b(j)));
+        points(j) = squeeze(image(a(j), b(j)));
     end
 
     % If the standard deviation of the pixel values are low, no car
@@ -212,9 +247,10 @@ else
 end
 
 % Update text boxes on GUI
-set(handles.edittotal,'String',totalspaces);
-set(handles.editoccupied,'String',totaloccupied);
-set(handles.editempty,'String',totalempty);
+set(handles.edittotal, 'String', totalspaces);
+set(handles.editoccupied, 'String', totaloccupied);
+set(handles.editempty, 'String', totalempty);
+set(handles.editstatus, 'String', 'Done!');
 
 
 % --- Executes on button press in plotbutton.
@@ -236,6 +272,20 @@ ylabel('Number of spaces');
 title('Number of empty and occupied spaces over time');
 legend('Occupied','Empty');
 
+
+% --- Executes on button press in clearbutton.
+function clearbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to clearbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global x y z;
+
+% Clear the data for x, y  and z
+x = 0;
+y = 0;
+z = 0;
+
+
 function edittotal_Callback(hObject, eventdata, handles)
 % hObject    handle to edittotal (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -256,7 +306,6 @@ function edittotal_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
 
 
 function editoccupied_Callback(hObject, eventdata, handles)
@@ -302,3 +351,29 @@ function editempty_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+
+function editstatus_Callback(hObject, eventdata, handles)
+% hObject    handle to editstatus (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of editstatus as text
+%        str2double(get(hObject,'String')) returns contents of editstatus as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function editstatus_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editstatus (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
