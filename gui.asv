@@ -163,23 +163,23 @@ totaloccupied = 0;
 totalempty = 0;
 
 % Do the analysis
-for i = 1 : size(oldcell, 1)
+for i = 1:size(oldcell,1)
 
     % Get the next mask to analyse
     BW = oldcell{i};
     % Create new vector consisting of the co ordinates of all points where
     % the mask overlaps the image
-    [a, b] = ind2sub([size(image, 1), size(image, 2)], find(BW));
+    [a,b] = ind2sub([size(image,1),size(image,2)],find(BW));
 
     % Create a zero vector which is the same length as the number of
     % co-ordintates
 	% (a and b are same length, so choose either)
-    points = zeros(length(a), 1);
+    points = zeros(length(a),1);
     
     % For every set of co-ordinates
-    for j = 1 : length(a)
+    for j = 1:length(a)
         % Fill this zero vector with the pixel values
-        points(j) = squeeze(image(a(j), b(j)));
+        points(j) = squeeze(image(a(j),b(j)));
     end
 
     % If the standard deviation of the pixel values are low, no car

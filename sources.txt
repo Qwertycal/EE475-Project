@@ -1,3 +1,5 @@
+Standard Deviation in MATLAB - http://uk.mathworks.com/help/matlab/ref/std.html		11/3/15
+Roipoly - http://uk.mathworks.com/help/images/ref/roipoly.html		11/3/15
 MATLAB tutorials - http://www.mathworks.com/matlabcentral/fileexchange/?term=authorid%3A31862	9/4/15
 Car park image - https://s.yimg.com/os/publish-images/finance/2014-09-17/f17e01a0-3e6a-11e4-9f72-05ead51a1487_car_auto_car_park.jpg	9/4/15
 Car park source - http://imgkid.com/empty-car-parking.shtml	9/4/15
@@ -14,3 +16,7 @@ Cell array - http://uk.mathworks.com/help/matlab/ref/cell.html		17/4/15
 Creating a cell array  - http://uk.mathworks.com/help/matlab/matlab_prog/create-a-cell-array.html	17/4/15
 Access data in a cell array - http://uk.mathworks.com/help/matlab/matlab_prog/access-data-in-a-cell-array.html	17/4/15
 Image overlay - http://uk.mathworks.com/matlabcentral/fileexchange/10502-image-overlay		17/4/15
+Explaining ind2sub - http://uk.mathworks.com/help/matlab/ref/ind2sub.html 	19/4/15
+Find - http://uk.mathworks.com/help/matlab/ref/find.html	19/4/15
+Zeros - http://uk.mathworks.com/help/matlab/ref/zeros.html	19/4/15
+Squeeze - http://uk.mathworks.com/help/matlab/ref/squeeze.html	19/4/15
