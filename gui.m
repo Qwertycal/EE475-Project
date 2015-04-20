@@ -191,7 +191,7 @@ function analysebutton_Callback(hObject, eventdata, handles)
 global totalspaces totaloccupied totalempty oldcell image x y z;
 
 % Update status text
-set(handles.editstatus, 'String', 'Analysing...');
+set(handles.editstatus, 'String', 'Analysing');
 
 % Reset the number of empty and occupied spaces
 totaloccupied = 0;
@@ -199,7 +199,7 @@ totalempty = 0;
 
 % Do the analysis
 for i = 1 : size(oldcell, 1)
-
+    tic;
     % Get the next mask to analyse
     BW = oldcell{i};
     % Create new vector consisting of the co ordinates of all points where
@@ -216,8 +216,12 @@ for i = 1 : size(oldcell, 1)
         % Fill this zero vector with the pixel values
         points(j) = squeeze(image(a(j), b(j)));
     end
-
+    
     % If the standard deviation of the pixel values are low, no car
+    
+    % Test - display std
+    disp(std(points));
+
     if std(points) < 20
         totalempty = totalempty +  1;
     else
