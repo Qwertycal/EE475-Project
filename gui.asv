@@ -172,15 +172,14 @@ if numberofregions > 0
     % Replicate the cell of masks, but cut off the last one
     oldcell = oldcell(1 : end - 1, :);
     numberofregions = numberofregions - 1;
+    
+    % Redraw the regions
+    imagewithoverlay = image;
+    for i = 0 : size(oldcell, 1) - 1 
+        imagewithoverlay = imoverlay(imagewithoverlay, oldcell{i + 1}, [1 1 1]);
+    end
+    imshow(imagewithoverlay);
 end
-
-% Redraw the regions
-imagewithoverlay = image;
-for i = 0 : size(oldcell, 1) - 1 
-    imagewithoverlay = imoverlay(imagewithoverlay, oldcell{i + 1}, [1 1 1]);
-end
-
-imshow(imagewithoverlay);
 
 
 % --- Executes on button press in analysebutton.
@@ -191,8 +190,7 @@ function analysebutton_Callback(hObject, eventdata, handles)
 global totalspaces totaloccupied totalempty oldcell image x y z;
 
 % Update status text
-set(handles.editstatus, 'String', 'Done!'
-
+set(handles.editstatus, 'String', 'Analysing');
 
 % Reset the number of empty and occupied spaces
 totaloccupied = 0;
@@ -381,4 +379,5 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-
+% --- Redraws the image.
+function redraw

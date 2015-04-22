@@ -97,12 +97,23 @@ function varargout = gui_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
+% --- Draws the image.
+function draw()
+global oldcell image;
+
+% Redraw the regions
+imagewithoverlay = image;
+for i = 0 : size(oldcell, 1) - 1 
+    imagewithoverlay = imoverlay(imagewithoverlay, oldcell{i + 1}, [1 1 1]);
+end
+imshow(imagewithoverlay);
+
 % --- Executes on button press in loadbutton.
 function loadbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to loadbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global image oldcell;
+global image;
 
 % Open the file loader
 [filename, pathname] = uigetfile('*.jpg', 'Select the image file');
@@ -113,12 +124,7 @@ image = image(:, :, 1);
 imshow(image);
 
 % Redraw the regions
-imagewithoverlay = image;
-for i = 0 : size(oldcell, 1) - 1 
-    imagewithoverlay = imoverlay(imagewithoverlay, oldcell{i + 1}, [1 1 1]);
-end
-
-imshow(imagewithoverlay);
+draw;
 
 
 % --- Executes on button press in drawbutton.
@@ -148,14 +154,9 @@ newcell{numberofregions + 1} = BW;
 % This ammended stack now becomes the old one
 oldcell = newcell;
 
-% Create visible overlay for the mask
-imagewithoverlay = image;
-for i = 0 : size(oldcell, 1) - 1 
-    imagewithoverlay = imoverlay(imagewithoverlay, oldcell{i + 1}, [1 1 1]);
-end
+% Draw the image
+draw();
 
-% Redraw the image
-imshow(imagewithoverlay);
 % Increase the number of regions
 numberofregions = numberofregions + 1;
 
@@ -172,15 +173,10 @@ if numberofregions > 0
     % Replicate the cell of masks, but cut off the last one
     oldcell = oldcell(1 : end - 1, :);
     numberofregions = numberofregions - 1;
+    
+    % Redraw the image
+    draw();
 end
-
-% Redraw the regions
-imagewithoverlay = image;
-for i = 0 : size(oldcell, 1) - 1 
-    imagewithoverlay = imoverlay(imagewithoverlay, oldcell{i + 1}, [1 1 1]);
-end
-
-imshow(imagewithoverlay);
 
 
 % --- Executes on button press in analysebutton.
@@ -334,7 +330,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-
 function editempty_Callback(hObject, eventdata, handles)
 % hObject    handle to editempty (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -378,6 +373,4 @@ function editstatus_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
 
