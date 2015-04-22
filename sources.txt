@@ -51,3 +51,15 @@ People - http://www.doschdesign.com/products/vizimages/Birds_Eye_People_African_
 Blur - http://docs.gimp.org/en/filters-blur.html	20/4/15
 
 Bright/Dark - http://docs.gimp.org/en/gimp-tool-brightness-contrast.html	20/4/15
+
+
+License Plates
+car1 - white background - http://www.collinsphotographic.co.uk/MX5/number_plate_front.jpg
+car2 - yellow background - http://www.olavsplates.com/foto_g/gb_ae02rya.jpg
+car3 - motorbike 2 rows - http://www.olavsplates.com/foto_g/gb_hj02twc.jpg
+car4 - far away - http://i.dailymail.co.uk/i/pix/2013/06/30/article-2351885-1A963101000005DC-567_634x370.jpg
+car5 - not straight - http://i.ebayimg.com/00/s/NTc2WDEwMjQ=/z/9CsAAOSwBLlVM43L/$_86.JPG
+car6 - too far away - http://i.ebayimg.com/00/s/NTc2WDEwMjQ=/z/9CsAAOSwBLlVM43L/$_86.JPG
+car7 - too close - http://www.thecarexpert.co.uk/wp-content/uploads/2012/09/Screen-Shot-2014-09-01-at-10.57.06am.png
+
+timing.cpp
