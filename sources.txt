@@ -62,4 +62,10 @@ car5 - not straight - http://i.ebayimg.com/00/s/NTc2WDEwMjQ=/z/9CsAAOSwBLlVM43L/
 car6 - too far away - http://i.ebayimg.com/00/s/NTc2WDEwMjQ=/z/9CsAAOSwBLlVM43L/$_86.JPG
 car7 - too close - http://www.thecarexpert.co.uk/wp-content/uploads/2012/09/Screen-Shot-2014-09-01-at-10.57.06am.png
 
+Error reason - http://stackoverflow.com/questions/16415058/visual-studio-2008-error-c2371-int8-t-redefinition-different-basic-types	22/04/15
+
+Guide generated files - http://uk.mathworks.com/help/matlab/creating_guis/files-generated-by-guide.html		23/4/15
+
+Global - http://uk.mathworks.com/help/matlab/ref/global.html	23/4/15
+
 timing.cpp

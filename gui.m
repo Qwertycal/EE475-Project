@@ -61,7 +61,7 @@ guidata(hObject, handles);
 % UIWAIT makes gui wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
-global numberofregions oldcell totalspaces totaloccupied totalempty x y z;
+global numberofregions oldcell totalspaces totaloccupied totalempty photonumber occupieddata emptydata;
 
 % Set up global variables to keep track of how many masks there are and
 % what the old cell looks like
@@ -78,12 +78,12 @@ totaloccupied = 0;
 totalempty = 0;
 
 % Set up global variables for graph data;
-% x = entry number or photo number
-x = [];
-% y = data on occupied spaces
-y = [];
-% z = data on empty spaces
-z = [];
+% Entry number or photo number
+photonumber = [];
+% Data on occupied spaces
+occupieddata = [];
+% Data on empty spaces
+emptydata = [];
 
 
 % --- Outputs from this function are returned to the command line.
@@ -99,11 +99,11 @@ varargout{1} = handles.output;
 
 % --- Draws the image.
 function draw()
-global oldcell image;
+global oldcell image numberofregions;
 
 % Redraw the regions
 imagewithoverlay = image;
-for i = 0 : size(oldcell, 1) - 1 
+for i = 0 : numberofregions - 1
     imagewithoverlay = imoverlay(imagewithoverlay, oldcell{i + 1}, [1 1 1]);
 end
 imshow(imagewithoverlay);
@@ -154,11 +154,13 @@ newcell{numberofregions + 1} = BW;
 % This ammended stack now becomes the old one
 oldcell = newcell;
 
+% Increase the number of regions
+numberofregions = numberofregions + 1;
+
 % Draw the image
 draw();
 
-% Increase the number of regions
-numberofregions = numberofregions + 1;
+
 
 
 % --- Executes on button press in deletebutton.
@@ -184,7 +186,7 @@ function analysebutton_Callback(hObject, eventdata, handles)
 % hObject    handle to analysebutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global totalspaces totaloccupied totalempty oldcell image x y z;
+global totalspaces totaloccupied totalempty numberofregions oldcell image photonumber occupieddata emptydata;
 
 % Update status text
 set(handles.editstatus, 'String', 'Analysing');
@@ -194,8 +196,7 @@ totaloccupied = 0;
 totalempty = 0;
 
 % Do the analysis
-for i = 1 : size(oldcell, 1)
-    tic;
+for i = 1 : numberofregions
     % Get the next mask to analyse
     BW = oldcell{i};
     % Create new vector consisting of the co ordinates of all points where
@@ -213,11 +214,10 @@ for i = 1 : size(oldcell, 1)
         points(j) = squeeze(image(a(j), b(j)));
     end
     
-    % If the standard deviation of the pixel values are low, no car
-    
-    % Test - display std
+    % Testing - remove next comment to see calculated std
     disp(std(points));
-
+    
+    % If the standard deviation of the pixel values are low, no car
     if std(points) < 20
         totalempty = totalempty +  1;
     else
@@ -230,20 +230,20 @@ totalspaces = totaloccupied + totalempty;
 
 % Check if data sets are empty. If they are, make them arrays with a single
 % element and set it to the first data values
-if(isempty(x))
-    x = 0;
+if(isempty(photonumber))
+    photonumber = 0;
     % Set the first data point to 1 rather than 0
-    x(end) = 1;
-    y = 0; 
-    y(end) = totaloccupied;
-    z = 0;
-    z(end) = totalempty;
+    photonumber(end) = 1;
+    occupieddata = 0; 
+    occupieddata(end) = totaloccupied;
+    emptydata = 0;
+    emptydata(end) = totalempty;
 % If they are not empty, add new data value to the end of each array
 else
     % Make the next data point 1 bigger than the last one
-    x(end + 1) = x(end) + 1; 
-    y(end + 1) = totaloccupied;
-    z(end + 1) = totalempty;
+    photonumber(end + 1) = photonumber(end) + 1; 
+    occupieddata(end + 1) = totaloccupied;
+    emptydata(end + 1) = totalempty;
 end
 
 % Update text boxes on GUI
@@ -258,13 +258,13 @@ function plotbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to plotbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global x y z;
+global photonumber occupieddata emptydata;
 
 % Set up new figure
 f = figure; 
 
 % Plot the data on empty and occupied spaces on the same plot
-plot(x, y, x, z);
+plot(photonumber, occupieddata, photonumber, emptydata);
 
 % Set up labels and legend
 xlabel('Picture number');
@@ -278,12 +278,12 @@ function clearbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to clearbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global x y z;
+global photonumber occupieddata emptydata;
 
 % Clear the data for x, y  and z
-x = 0;
-y = 0;
-z = 0;
+photonumber = 0;
+occupieddata = 0;
+emptydata = 0;
 
 
 function edittotal_Callback(hObject, eventdata, handles)
