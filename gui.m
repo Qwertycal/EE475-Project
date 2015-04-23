@@ -168,7 +168,7 @@ function deletebutton_Callback(hObject, eventdata, handles)
 % hObject    handle to deletebutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global oldcell numberofregions image;
+global oldcell numberofregions;
 
 % Check if there are regions to delete
 if numberofregions > 0
@@ -211,7 +211,7 @@ for i = 1 : numberofregions
     % For every set of co-ordinates
     for j = 1 : length(a)
         % Fill this zero vector with the pixel values
-        points(j) = squeeze(image(a(j), b(j)));
+        points(j) = (image(a(j), b(j)));
     end
     
     % Testing - remove next comment to see calculated std
