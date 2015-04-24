@@ -53,6 +53,7 @@ Blur - http://docs.gimp.org/en/filters-blur.html	20/4/15
 
 Bright/Dark - http://docs.gimp.org/en/gimp-tool-brightness-contrast.html	20/4/15
 
+Tic and Toc - http://uk.mathworks.com/help/matlab/ref/tic.html		20/4/15
 
 License Plates
 car1 - white background - http://www.collinsphotographic.co.uk/MX5/number_plate_front.jpg

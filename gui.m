@@ -203,14 +203,14 @@ for i = 1 : numberofregions
     % the mask overlaps the image
     [a, b] = ind2sub([size(image, 1), size(image, 2)], find(BW));
 
-    % Create a zero vector which is the same length as the number of
+    % Create a zero array which is the same length as the number of
     % co-ordintates
 	% (a and b are same length, so choose either)
     points = zeros(length(a), 1);
     
     % For every set of co-ordinates
     for j = 1 : length(a)
-        % Fill this zero vector with the pixel values
+        % Fill this zero array with the pixel values
         points(j) = (image(a(j), b(j)));
     end
     
@@ -282,6 +282,7 @@ global photonumber occupieddata emptydata;
 
 % Clear the data for x, y  and z
 photonumber = 0;
+photonumber(end) = 1;
 occupieddata = 0;
 emptydata = 0;
 
